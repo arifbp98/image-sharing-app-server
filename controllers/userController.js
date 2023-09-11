@@ -8,6 +8,11 @@ module.exports = {
       const { name, email, password } = req.body;
       const hashedPassword = hashPassword(password, 8);
 
+      const user = await User.findOne({ where: { email } });
+      if (user) {
+        throw { name: "EmailExists" };
+      }
+
       const newUser = await User.create({
         name,
         email,
@@ -37,7 +42,7 @@ module.exports = {
       const payload = { id: user.id, name: user.name };
       const token = generateToken(payload);
 
-      res.status(200).json({ email, accessToken: token });
+      res.status(200).json({ id: user.id, email, accessToken: token });
     } catch (error) {
       next(error);
     }

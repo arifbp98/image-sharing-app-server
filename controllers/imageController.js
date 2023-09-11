@@ -1,4 +1,4 @@
-const { Image } = require("../models");
+const { Image, User } = require("../models");
 const cloudinaryConfig = require("../config/cloudinary");
 
 module.exports = {
@@ -37,6 +37,7 @@ module.exports = {
 
       const image = await Image.findByPk(id, {
         attributes: { exclude: ["createdAt", "updatedAt"] },
+        include: { model: User },
       });
       if (!image) {
         throw { name: "DataNotFound" };
